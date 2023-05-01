@@ -34,3 +34,4 @@ Made with [create-react-native-library](https://github.com/callstack/react-nativ
 # react-native-chat ─╯
 # react-native-chat ─╯
 # react-native-chat ─╯
+# react-native-chat ─╯

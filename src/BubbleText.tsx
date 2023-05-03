@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Linking, Alert } from 'react-native';
+import { StyleSheet, Linking, Alert } from 'react-native';
 import React from 'react';
 
 import ParsedText from 'react-native-parsed-text';
@@ -7,7 +7,6 @@ import { COLORS } from './theme';
 export type BubbleTextProps = {
   color?: string;
   text: string;
-  parsePatterns?(linkStyle: TextStyle): any;
 };
 
 const handleUrlPress = (url: string) => {

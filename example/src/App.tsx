@@ -18,7 +18,10 @@ export default function App() {
           Mofe is so cool
         </Text>
       </Bubble>
-      <Bubble backgroundColor="#00008B">
+      <Bubble
+        imageUrl="https://knittingisawesome.com/wp-content/uploads/2012/12/cat-wearing-a-reindeer-hat1.jpg"
+        backgroundColor="#00008B"
+      >
         <Text>😃</Text>
       </Bubble>
       <Bubble

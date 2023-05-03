@@ -154,9 +154,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.21.5",
-    "dayjs": "^1.11.7",
     "moment": "^2.29.4",
     "react-native-gesture-handler": "^2.9.0",
+    "react-native-lightbox-v2": "^0.9.0",
     "react-native-parsed-text": "^0.0.22"
   }
 }

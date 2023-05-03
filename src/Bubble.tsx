@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import { COLORS, SIZES } from './theme';
 import BubbleText from './BubbleText';
+import BubbleImage from './BubbleImage';
 
 export type BubbleProps = {
   backgroundColor: string;
@@ -17,6 +18,7 @@ export type BubbleProps = {
   position?: 'left' | 'right';
   text?: string;
   time?: number | string;
+  imageUrl?: string;
   username?: string;
   wrapperStyle?: {
     left?: object;
@@ -35,6 +37,11 @@ const renderTime = (time?: number | string, color?: string) => {
 const renderText = (text?: string, color?: string) => {
   if (!text) return null;
   return <BubbleText text={text} color={color} />;
+};
+
+const renderImage = (url?: string) => {
+  if (!url) return;
+  return <BubbleImage url={url} />;
 };
 const renderUserName = (username?: string | string, color?: string) => {
   if (!username) return null;
@@ -60,6 +67,7 @@ const Bubble = ({
   text,
   time,
   wrapperStyle,
+  imageUrl,
   username,
 }: BubbleProps) => {
   return (
@@ -80,6 +88,7 @@ const Bubble = ({
           {renderUserName(username, color)}
           {renderTime(time, color)}
         </View>
+        {renderImage(imageUrl)}
         {renderText(text, color)}
         {children}
       </View>

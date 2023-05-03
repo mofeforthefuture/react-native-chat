@@ -22,7 +22,11 @@ export default function App() {
         <Text>😃</Text>
       </Bubble>
       <Bubble
-        text={'Dey playyy:)'}
+        time={date.getTime()}
+        text={` Hello this is an example of the ParsedText, links like http://www.google.com or http://www.facebook.com are clickable and phone number 444-555-6666 can call too.
+        But you can also do more with this package, for example Bob will change style and David too. foo@gmail.com
+        And the magic number is 42!
+        #react #react-native)`}
         username="Mofe"
         color="#fff"
         backgroundColor="#AA4A44"

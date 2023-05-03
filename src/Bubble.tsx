@@ -164,7 +164,8 @@ const styles = {
     },
     row: {
       alignItems: 'center',
-      flexDirection: 'row-reverse',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
   }),
 };

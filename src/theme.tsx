@@ -15,4 +15,5 @@ export const COLORS = {
   white: '#FFFFFF',
   gray: '#EAEDF0',
   black: '#000000',
+  background: '#eff0ec',
 };

@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, SafeAreaView, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  FlatList,
+  KeyboardAvoidingView,
+} from 'react-native';
 
 import Bubble from './Bubble';
 import ChatHeader from './ChatHeader';
+import ChatInput from './ChatInput';
 
 export type ChatProps = {
   username?: string;
@@ -38,22 +45,25 @@ const Chat = ({
 }: ChatProps) => {
   return (
     <SafeAreaView>
-      <View style={[styles.container, { backgroundColor }]}>
-        <ChatHeader username={username} isOnline={isOnline} />
-        <FlatList
-          data={DATA}
-          renderItem={({ item }) => (
-            <Bubble
-              time={item.time}
-              position={userId == item.id ? 'right' : 'left'}
-              username={item.username}
-              text={item.text}
-              color={bubbleTextColor}
-              onReply={() => console.log(item)}
-            />
-          )}
-        />
-      </View>
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <View style={[styles.container, { backgroundColor }]}>
+          <ChatHeader username={username} isOnline={isOnline} />
+          <FlatList
+            data={DATA}
+            renderItem={({ item }) => (
+              <Bubble
+                time={item.time}
+                position={userId == item.id ? 'right' : 'left'}
+                username={item.username}
+                text={item.text}
+                color={bubbleTextColor}
+                onReply={() => console.log(item)}
+              />
+            )}
+          />
+          <ChatInput />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

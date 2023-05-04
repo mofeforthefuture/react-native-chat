@@ -1,21 +1,23 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Animated, Image } from 'react-native';
 
 import moment from 'moment';
 
 import { COLORS, SIZES } from './theme';
 import BubbleText from './BubbleText';
 import BubbleImage from './BubbleImage';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import { reply, replyRight } from './assets';
 
 export type BubbleProps = {
-  backgroundColor: string;
+  backgroundColor?: string;
   children?: React.ReactNode;
   color?: string;
   containerStyle?: {
     left?: object;
     right?: object;
   };
-  position?: 'left' | 'right';
+  position?: 'left' | 'right' | void;
   text?: string;
   time?: number | string;
   imageUrl?: string;
@@ -24,6 +26,7 @@ export type BubbleProps = {
     left?: object;
     right?: object;
   };
+  onReply?: () => void;
 };
 
 const renderTime = (time?: number | string, color?: string) => {
@@ -69,7 +72,19 @@ const Bubble = ({
   wrapperStyle,
   imageUrl,
   username,
+  onReply,
 }: BubbleProps) => {
+  const [showReply, setShowReply] = useState(false);
+
+  const handleReply = () => {
+    setShowReply(false);
+    myStopFunction();
+  };
+  const myTimeout = setTimeout(handleReply, 200);
+
+  function myStopFunction() {
+    clearTimeout(myTimeout);
+  }
   return (
     <View
       style={[
@@ -77,22 +92,84 @@ const Bubble = ({
         containerStyle && containerStyle[position],
       ]}
     >
-      <View
-        style={[
-          styles[position].bubble,
-          wrapperStyle && wrapperStyle[position],
-          { backgroundColor },
-        ]}
-      >
-        <View style={styles[position].row}>
-          {renderUserName(username, color)}
-          {renderTime(time, color)}
+      {showReply && (
+        <View style={bubbleStyles.reply}>
+          <Image
+            source={position == 'left' ? reply : replyRight}
+            style={{
+              width: 20,
+              height: 20,
+            }}
+          />
         </View>
-        {renderImage(imageUrl)}
-        {renderText(text, color)}
-        {children}
-      </View>
+      )}
+      <Snappable
+        reply={() => {
+          if (onReply) {
+            setShowReply(true);
+            onReply();
+          }
+        }}
+      >
+        <View
+          style={[
+            styles[position].bubble,
+            wrapperStyle && wrapperStyle[position],
+            {
+              backgroundColor:
+                backgroundColor || styles[position].bubble.backgroundColor,
+            },
+          ]}
+        >
+          <View style={styles[position].row}>
+            {renderUserName(username, color)}
+            {renderTime(time, color)}
+          </View>
+          {renderImage(imageUrl)}
+          {renderText(text, color)}
+          {children}
+        </View>
+      </Snappable>
     </View>
+  );
+};
+
+export type SnappableProps = {
+  children?: React.ReactNode;
+  reply: () => void;
+};
+const Snappable = ({ children, reply, back }: SnappableProps) => {
+  const _dragX = new Animated.Value(0);
+  const _transX = _dragX.interpolate({
+    inputRange: [-100, -50, 0, 50, 100],
+    outputRange: [-30, -10, 0, 10, 30],
+  });
+  const _onGestureEvent = Animated.event(
+    [{ nativeEvent: { translationX: _dragX } }],
+    { useNativeDriver: true }
+  );
+  const _onHandlerStateChange = (event) => {
+    if (event.nativeEvent.oldState === 4) {
+      reply();
+      Animated.spring(_dragX, {
+        velocity: event.nativeEvent.velocityX,
+        tension: 10,
+        friction: 2,
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+  return (
+    <PanGestureHandler
+      maxPointers={1}
+      onGestureEvent={_onGestureEvent}
+      onHandlerStateChange={_onHandlerStateChange}
+    >
+      <Animated.View style={{ transform: [{ translateX: _transX }] }}>
+        {children}
+      </Animated.View>
+    </PanGestureHandler>
   );
 };
 
@@ -141,8 +218,9 @@ const styles = {
   right: StyleSheet.create({
     container: {
       width: SIZES.width,
-      alignItems: 'flex-end',
+      alignItems: 'center',
       paddingHorizontal: SIZES.base,
+      flexDirection: 'row-reverse',
     },
     bubble: {
       backgroundColor: COLORS.blue,
@@ -150,6 +228,7 @@ const styles = {
       borderRadius: SIZES.base,
       marginBottom: SIZES.base,
       maxWidth: SIZES.width * 0.7,
+      marginRight: SIZES.base,
     },
 
     arrow: {
@@ -183,6 +262,13 @@ const bubbleStyles = StyleSheet.create({
   topInfo: {
     fontWeight: '300',
     fontSize: 8,
+  },
+  reply: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

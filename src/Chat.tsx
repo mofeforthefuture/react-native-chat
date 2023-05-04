@@ -1,77 +1,76 @@
-import React from 'react'
-import {Button, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import { StyleSheet, View, SafeAreaView, FlatList } from 'react-native';
 
-
-import Bubble from './Bubble'
-
+import Bubble from './Bubble';
+import ChatHeader from './ChatHeader';
 
 export type ChatProps = {
-    name: string;
-    baseEnthusiasmLevel?: number;
-  };
-  
-  const Chat: React.FC<ChatProps> = ({
-    name,
-    baseEnthusiasmLevel = 0,
-  }) => {
-    const [enthusiasmLevel, setEnthusiasmLevel] = React.useState(
-      baseEnthusiasmLevel,
-    );
-  
-    const onIncrement = () =>
-      setEnthusiasmLevel(enthusiasmLevel + 1);
-    const onDecrement = () =>
-      setEnthusiasmLevel(
-        enthusiasmLevel > 0 ? enthusiasmLevel - 1 : 0,
-      );
-  
-    const getExclamationMarks = (numChars: number) =>
-      numChars > 0 ? Array(numChars + 1).join('!') : '';
-  
-    return (
-      <View style={styles.container}>
-        <Text style={styles.greeting}>
-          Chat {name}
-          {getExclamationMarks(enthusiasmLevel)}
-        </Text>
-        <View>
-          <Button
-            title="Increase enthusiasm"
-            accessibilityLabel="increment"
-            onPress={onIncrement}
-            color="blue"
-          />
-          <Button
-            title="Decrease enthusiasm"
-            accessibilityLabel="decrement"
-            onPress={onDecrement}
-            color="red"
-          />
-        </View>
+  username?: string;
+  isOnline?: boolean;
+  backgroundColor: string;
+  bubbleColor?: string;
+  bubbleTextColor?: string;
+  userId: string | number;
+};
+
+const date = new Date();
+const DATA = [
+  {
+    id: 2,
+    time: date.getTime(),
+    username: 'Eyimofe Omotayo',
+    text: 'Yoo this is looking good',
+  },
+  {
+    id: 1,
+    time: date.getTime(),
+    username: 'Cool Joe',
+    text: 'IKR	😃.',
+  },
+];
+
+const Chat = ({
+  username,
+  isOnline,
+  backgroundColor,
+  bubbleTextColor,
+  userId,
+}: ChatProps) => {
+  return (
+    <SafeAreaView>
+      <View style={[styles.container, { backgroundColor }]}>
+        <ChatHeader username={username} isOnline={isOnline} />
+        <FlatList
+          data={DATA}
+          renderItem={({ item }) => (
+            <Bubble
+              time={item.time}
+              position={userId == item.id ? 'right' : 'left'}
+              username={item.username}
+              text={item.text}
+              color={bubbleTextColor}
+              onReply={() => console.log(item)}
+            />
+          )}
+        />
       </View>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    greeting: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      margin: 16,
-    },
-  });
-  
-  export default Chat;
+    </SafeAreaView>
+  );
+};
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#eff0ec',
+  },
+  greeting: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    margin: 16,
+  },
+});
 
+export default Chat;
 
-
-export {
-    Chat,
-   Bubble
-  }
-  
+export { Chat, Bubble };
